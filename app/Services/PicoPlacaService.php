@@ -12,7 +12,7 @@ class PicoPlacaService
 
     public function predict($request) {
 
-        $jsonResponse = array();
+        $response = array();
 
         $validator = Validator::make($request->all(), [
             'plateNumber' => ['required', 'min:6', 'max:7', 'alpha_num', new PlateNumber],
@@ -21,14 +21,14 @@ class PicoPlacaService
         ]);
 
         if ($validator->fails()) {
-            $jsonResponse['responseType'] = ResponseType::ERROR;
+            $response['responseType'] = ResponseType::ERROR;
             $errors = array();
 
             foreach ($validator->errors()->messages() as $message) :
                 array_push($errors, $message[0]);
             endforeach;
 
-            $jsonResponse['errors'] = $errors;
+            $response['errors'] = $errors;
         } else {
 
             $plateNumber = $request->plateNumber;
@@ -38,22 +38,22 @@ class PicoPlacaService
             $plateNumberAllowed = $this->validatePicoPlaca($plateNumber, $inputDate, $inputTime);
 
             if ($plateNumberAllowed) {
-                $jsonResponse['responseType'] = ResponseType::SUCCESS;
-                $jsonResponse['responseMessage'] = 'The ' . $plateNumber . ' plate number is allowed to be on the road on '
+                $response['responseType'] = ResponseType::SUCCESS;
+                $response['responseMessage'] = 'The ' . $plateNumber . ' plate number is allowed to be on the road on '
                     . $inputDate . ' at ' . $inputTime;
             } else {
-                $jsonResponse['responseType'] = ResponseType::WARNING;
-                $jsonResponse['responseMessage'] = 'The ' . $plateNumber . ' plate number is not allowed to be on the road on '
+                $response['responseType'] = ResponseType::WARNING;
+                $response['responseMessage'] = 'The ' . $plateNumber . ' plate number is not allowed to be on the road on '
                     . $inputDate . ' at ' . $inputTime;
             }
 
         }
 
-        return $jsonResponse;
+        return $response;
 
     }
 
-    private function validatePicoPlaca($plateNumber, $inputDate, $inputTime) {
+    public function validatePicoPlaca($plateNumber, $inputDate, $inputTime) {
 
         $lastDigit = substr($plateNumber, -1);
         $convertedDate = DateTime::createFromFormat('Y-m-d', $inputDate);
