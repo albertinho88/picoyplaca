@@ -7,9 +7,18 @@ use App\Rules\PlateNumber;
 use DateTime;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Pico y Placa Service Class
+ */
 class PicoPlacaService
 {
 
+    /**
+     * Function to predict the pico y placa logic
+     *
+     * @request object with the attributes passed from the controller
+     * @return array with a type of result and a message
+     */
     public function predict($request) {
 
         $response = array();
@@ -53,6 +62,14 @@ class PicoPlacaService
 
     }
 
+    /**
+     * Function to validate the schedule of the pico y placa rule
+     *
+     * @plateNumber plate number
+     * @inputDate date
+     * @inputTime time
+     * @return boolean value which indicates if the plate number can or not road in the date and time specified.
+     */
     public function validatePicoPlaca($plateNumber, $inputDate, $inputTime) {
 
         $lastDigit = substr($plateNumber, -1);
