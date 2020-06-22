@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'ApplicationController@renderHome')->name('home');
+Route::post('predict', 'ApplicationController@predict');
+
+Route::fallback(function () {
+    return redirect()->route('home');
 });
